@@ -7,7 +7,7 @@
     ------------------------------------------------------------ */
     var WHATSAPP_NUMBER = "264817789719"; // Replace with your WhatsApp number
     var WHATSAPP_MESSAGE =
-        "Hi, I'm interested in your WhiteLable Portal. Please share the integration process, API documentation, pricing, and setup details.";
+        "Hi, I'm interested in your Aviator API Integration. Please share the integration process, API documentation, pricing, and setup details.";
 
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
