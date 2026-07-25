@@ -4,7 +4,7 @@
     /* ------------------------------------------------------------
        Config — edit this number to your real WhatsApp business line
     ------------------------------------------------------------ */
-    var WHATSAPP_NUMBER = "264813278786"; // replace with real number, digits only, country code first
+    var WHATSAPP_NUMBER = "264817789719"; // replace with real number, digits only, country code first
     var WHATSAPP_MESSAGE = "Hi! I'm interested in launching a gaming platform with Golden Stake. Please share more details.";
 
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
