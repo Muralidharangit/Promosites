@@ -2,12 +2,9 @@
     "use strict";
 
     /* ------------------------------------------------------------
-       Config — Edit your WhatsApp Business Number
-       Country code first, digits only (no +, spaces, or hyphens)
+       Config — Edit your WhatsApp Link
     ------------------------------------------------------------ */
-    var WHATSAPP_NUMBER = "264817789719"; // Replace with your WhatsApp number
-    var WHATSAPP_MESSAGE =
-        "Hello! I am interested in launching my own gaming platform in Namibia.";
+    var WHATSAPP_LINK = "https://chat.whatsapp.com/KeqzOIXYTn1LgxJwCaclFX?s=cl&p=a&ilr=0";
 
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -72,13 +69,7 @@
     function openWhatsApp(e) {
         if (e) e.preventDefault();
 
-        var url =
-            "https://wa.me/" +
-            WHATSAPP_NUMBER +
-            "?text=" +
-            encodeURIComponent(WHATSAPP_MESSAGE);
-
-        window.open(url, "_blank", "noopener,noreferrer");
+        window.open(WHATSAPP_LINK, "_blank", "noopener,noreferrer");
     }
 
     document.querySelectorAll(".js-whatsapp").forEach(function (el) {
