@@ -2,7 +2,22 @@
     "use strict";
 
     /* ------------------------------------------------------------
-       Config — Edit your WhatsApp Link
+       EmailJS Configuration
+       1. Sign up at https://www.emailjs.com
+       2. Create a Gmail service → copy the Service ID
+       3. Create an Email Template → copy the Template ID
+       4. Go to Account → copy your Public Key
+       Replace the placeholder strings below with your real IDs.
+    ------------------------------------------------------------ */
+    var EMAILJS_PUBLIC_KEY = "pNmaT1-DPyj08MCFG";   // e.g. "abc123XYZ"
+    var EMAILJS_SERVICE_ID = "service_orowjne";   // e.g. "service_xxxxxxx"
+    var EMAILJS_TEMPLATE_ID = "template_mqi06xp";  // e.g. "template_xxxxxxx"
+
+    // Initialise EmailJS once
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    /* ------------------------------------------------------------
+       Config — WhatsApp Link
     ------------------------------------------------------------ */
     var WHATSAPP_LINK = "https://chat.whatsapp.com/KeqzOIXYTn1LgxJwCaclFX?s=cl&p=a&ilr=0";
 
@@ -23,7 +38,7 @@
             "Low Investment",
             "High Returns"
         ];
-// vsdgdf
+        // vsdgdf
         var phraseIndex = 0;
         var charIndex = 0;
         var isErasing = false;
@@ -185,6 +200,172 @@
             });
 
             item.classList.toggle("active");
+        });
+    });
+
+    /* ------------------------------------------------------------
+       Bootstrap-like Custom Modal
+    ------------------------------------------------------------ */
+    var modalTriggers = document.querySelectorAll('[data-bs-toggle="modal"]');
+    var modalDismissers = document.querySelectorAll('[data-bs-dismiss="modal"]');
+
+    function openModal(modal) {
+        if (!modal) return;
+        modal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+        // Force reflow for CSS transitions
+        modal.offsetHeight;
+        modal.classList.add("show");
+    }
+
+    function closeModal(modal) {
+        if (!modal) return;
+        modal.classList.remove("show");
+        setTimeout(function () {
+            modal.style.display = "none";
+            if (!document.querySelector(".modal.show")) {
+                document.body.style.overflow = "";
+            }
+        }, 350);
+    }
+
+    modalTriggers.forEach(function (trigger) {
+        trigger.addEventListener("click", function (e) {
+            e.preventDefault();
+            var targetSelector = trigger.getAttribute("data-bs-target");
+            var modal = document.querySelector(targetSelector);
+            openModal(modal);
+        });
+    });
+
+    modalDismissers.forEach(function (dismiss) {
+        dismiss.addEventListener("click", function (e) {
+            e.preventDefault();
+            var modal = dismiss.closest(".modal");
+            closeModal(modal);
+        });
+    });
+
+    window.addEventListener("click", function (e) {
+        var modals = document.querySelectorAll(".modal");
+        modals.forEach(function (modal) {
+            if (e.target === modal) {
+                closeModal(modal);
+            }
+        });
+    });
+
+    /* ------------------------------------------------------------
+       Contact Form Submission — EmailJS + WhatsApp Redirect
+    ------------------------------------------------------------ */
+    document.querySelectorAll(".js-contact-form").forEach(function (form) {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            var nameInput = form.querySelector('input[name="name"]');
+            var phoneInput = form.querySelector('input[name="phone"]');
+
+            if (!nameInput || !phoneInput) return;
+
+            var nameVal = nameInput.value.trim();
+            var phoneVal = phoneInput.value.trim();
+
+            if (!nameVal || !phoneVal) return;
+
+            // Disable submit button to prevent double-submit
+            var submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = "0.7";
+            }
+
+            // Save to LocalStorage for offline lead recovery
+            try {
+                var storedLeads = localStorage.getItem("platform_leads");
+                var leads = storedLeads ? JSON.parse(storedLeads) : [];
+                leads.push({
+                    name: nameVal,
+                    phone: phoneVal,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem("platform_leads", JSON.stringify(leads));
+            } catch (err) {
+                console.error("Error saving lead:", err);
+            }
+
+            // Get current date & time for the {{time}} template variable
+            var now = new Date();
+            var timeVal = now.toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+
+            // Send via EmailJS — params exactly match {{name}}, {{time}}, {{mobile}}, {{message}} in template
+            console.log("Sending email...", EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                name: nameVal,
+                time: timeVal,
+                mobile: phoneVal,
+                message: "New platform enquiry — please respond at your earliest convenience."
+            });
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                name: nameVal,
+                time: timeVal,
+                mobile: phoneVal,
+                message: "New platform enquiry — please respond at your earliest convenience."
+            })
+                .then(function () {
+                    console.log("Email sent successfully to syscorpfrontend@gmail.com");
+                })
+                .catch(function (err) {
+                    console.error("EmailJS error:", err);
+                    // Re-enable button on failure so user can retry
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = "";
+                    }
+                });
+
+            // Show success message immediately
+            var parent = form.parentElement;
+            var successMessage = parent.querySelector(".js-success-message");
+            if (successMessage) {
+                form.style.display = "none";
+                successMessage.style.display = "flex";
+            }
+
+            // Redirect to WhatsApp after 2 seconds
+            setTimeout(function () {
+                window.open(WHATSAPP_LINK, "_blank", "noopener,noreferrer");
+
+                // Close modal (if inside one) and reset form
+                var modal = form.closest(".modal");
+                if (modal) {
+                    closeModal(modal);
+                    setTimeout(function () {
+                        form.reset();
+                        form.style.display = "block";
+                        if (successMessage) successMessage.style.display = "none";
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.style.opacity = "";
+                        }
+                    }, 400);
+                } else {
+                    setTimeout(function () {
+                        form.reset();
+                        form.style.display = "block";
+                        if (successMessage) successMessage.style.display = "none";
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.style.opacity = "";
+                        }
+                    }, 1000);
+                }
+            }, 2000);
         });
     });
 

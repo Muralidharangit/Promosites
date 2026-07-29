@@ -16,6 +16,9 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="style.css?v=2">
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 
 <body>
@@ -45,7 +48,7 @@
                 <img src="images/wl_logo.png" alt="WL White Label" class="brand-logo">
                 <span class="brand-text"><span class="text-white">White</span> Label</span>
             </a>
-            <a href="#" class="nav-cta js-whatsapp">
+            <a href="#" class="nav-cta" data-bs-toggle="modal" data-bs-target="#contactModal">
                 <span style="position: relative; z-index: 2; font-weight: 800;">Start Your Platform</span>
                 <div class="cta-shine"></div>
             </a>
@@ -161,7 +164,7 @@
                             </div>
                         </div>
 
-                        <a href="#cta-final" class="btn premium-cta-btn btn-lg js-whatsapp" style="margin-top: 10px;">
+                        <a href="#" class="btn premium-cta-btn btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal" style="margin-top: 10px;">
                             <span style="position: relative; z-index: 2; font-weight: 800;">Start Your Gaming
                                 Platform</span>
                             <div class="cta-shine"></div>
@@ -787,7 +790,7 @@
                         </div>
                     </div>
 
-                    <a href="#" class="btn premium-cta-btn btn-xl js-whatsapp" style="margin-top: 10px;">
+                    <a href="#" class="btn premium-cta-btn btn-xl" data-bs-toggle="modal" data-bs-target="#contactModal" style="margin-top: 10px;">
                         <span style="position: relative; z-index: 2; font-weight: 800;">👉 Get Your Free Consultation
                             Now</span>
                         <div class="cta-shine"></div>
@@ -795,6 +798,44 @@
 
                     <p class="hero-microcopy" style="margin-top: 24px;">Limited Onboarding Slots Available · No Hidden
                         Costs</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ CONTACT SECTION ============ -->
+        <section class="section contact-section" id="contact" data-reveal>
+            <div class="section-inner">
+                <div class="contact-card">
+                    <p class="eyebrow eyebrow-center">GET IN TOUCH</p>
+                    <h2 class="section-title center text-gold-gradient" style="margin-bottom: 24px;">Start Your Journey</h2>
+                    <p class="text-center" style="color: var(--cream-dim); margin-bottom: 40px; font-size: 1.05rem;">
+                        Enter your details below to schedule your free consultation. Our team will contact you shortly.
+                    </p>
+
+                    <form id="contactSectionForm" class="contact-form js-contact-form">
+                        <div class="form-group">
+                            <label for="contact-name" class="form-label">Full Name</label>
+                            <input type="text" id="contact-name" name="name" class="form-control" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-phone" class="form-label">Mobile Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+264</span>
+                                <input type="tel" id="contact-phone" name="phone" class="form-control" placeholder="Enter mobile number" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn premium-cta-btn btn-lg w-100" style="margin-top: 20px;">
+                            <span style="position: relative; z-index: 2; font-weight: 800;">Submit Application</span>
+                            <div class="cta-shine"></div>
+                        </button>
+                    </form>
+
+                    <div class="form-success-message js-success-message">
+                        <div class="success-icon">✓</div>
+                        <h3 class="text-gold-gradient" style="font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; margin-bottom: 12px;">Thank You!</h3>
+                        <p style="color: var(--cream-dim); font-size: 1.05rem; margin-bottom: 24px;">Your request has been received. We are redirecting you to our official WhatsApp chat...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -812,7 +853,7 @@
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href="#" class="nav-cta js-whatsapp" style="margin: 0 auto;">
+                    <a href="#" class="nav-cta" data-bs-toggle="modal" data-bs-target="#contactModal" style="margin: 0 auto;">
                         <span style="position: relative; z-index: 2; font-weight: 800;">START YOUR PLATFORM</span>
                         <div class="cta-shine"></div>
                     </a>
@@ -834,7 +875,46 @@
         <span class="wa-tooltip">Chat with us</span>
     </a>
 
-    <script src="script.js"></script>
+    <!-- ============ BOOTSTRAP-LIKE MODAL ============ -->
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">Start Your Platform</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="contactModalForm" class="contact-form js-contact-form">
+                        <div class="form-group">
+                            <label for="modal-name" class="form-label">Full Name</label>
+                            <input type="text" id="modal-name" name="name" class="form-control" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="modal-phone" class="form-label">Mobile Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+264</span>
+                                <input type="tel" id="modal-phone" name="phone" class="form-control" placeholder="Enter mobile number" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn premium-cta-btn btn-lg w-100" style="margin-top: 20px;">
+                            <span style="position: relative; z-index: 2; font-weight: 800;">Get Started Now</span>
+                            <div class="cta-shine"></div>
+                        </button>
+                    </form>
+
+                    <div class="form-success-message js-success-message">
+                        <div class="success-icon">✓</div>
+                        <h3 class="text-gold-gradient" style="font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; margin-bottom: 12px;">Thank You!</h3>
+                        <p style="color: var(--cream-dim); font-size: 1.05rem; margin-bottom: 24px;">Your request has been received. We are redirecting you to our official WhatsApp chat...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=6"></script>
 </body>
 
 </html>
