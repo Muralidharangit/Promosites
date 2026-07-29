@@ -3192,3 +3192,402 @@ ul {
     padding: 40px 20px;
   }
 }
+
+/* ============================================================
+   Scroll to Top Floating Button
+============================================================ */
+.scroll-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background-color: rgba(26, 0, 2, 0.85); /* Premium dark red-black */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.15);
+  z-index: 999;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  
+  /* Initial hidden state */
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.8) translateY(15px);
+  transition: 
+    opacity 0.4s ease, 
+    visibility 0.4s ease, 
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Position adjustment if WhatsApp button is present on screen */
+body:has(.floating-whatsapp) .scroll-to-top {
+  bottom: 112px;
+}
+
+/* Visible class toggled by JS */
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateY(0);
+}
+
+/* Scroll Direction: Down (minimize, dock to screen edge, rotate arrow down) */
+.scroll-to-top.visible.scroll-down {
+  opacity: 0.5;
+  transform: translateX(38px) scale(0.8);
+  box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.scroll-to-top.visible.scroll-down .arrow-icon {
+  transform: rotate(180deg);
+}
+
+.scroll-to-top.visible.scroll-down:hover {
+  opacity: 1;
+  transform: translateX(0) scale(1.1) translateY(-4px) !important;
+}
+
+.scroll-to-top.visible.scroll-down:hover .arrow-icon {
+  transform: rotate(0deg);
+}
+
+/* Scroll Direction: Up (active & pulsing) */
+.scroll-to-top.visible.scroll-up {
+  opacity: 1;
+  transform: scale(1.03);
+  border-color: rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 15px rgba(255, 215, 0, 0.2);
+  animation: stt-gold-glow 2s infinite ease-in-out;
+}
+
+/* Progress Ring Styling */
+.scroll-to-top svg.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 56px;
+  height: 56px;
+  transform: rotate(-90deg); /* Start from the top */
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+
+.scroll-to-top svg.progress-ring circle {
+  transition: stroke-dashoffset 0.1s linear;
+  stroke-linecap: round;
+}
+
+/* Arrow Icon styling */
+.scroll-to-top .arrow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.scroll-to-top .arrow-icon svg {
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Tooltip */
+.stt-tooltip {
+  position: absolute;
+  right: 68px;
+  top: 50%;
+  transform: translateY(-50%) translateX(10px);
+  background: rgba(15, 0, 3, 0.95);
+  color: var(--cream);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Hover effects */
+.scroll-to-top:hover {
+  background-color: rgba(42, 0, 8, 0.95);
+  border-color: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.35), inset 0 0 15px rgba(255, 215, 0, 0.25);
+  transform: scale(1.1) translateY(-4px) !important;
+}
+
+.scroll-to-top:hover .arrow-icon svg {
+  transform: translateY(-2px);
+  animation: stt-arrow-bob 1.5s infinite ease-in-out;
+}
+
+.scroll-to-top:hover .stt-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Custom Animations */
+@keyframes stt-arrow-bob {
+  0%, 100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes stt-gold-glow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.25), inset 0 0 10px rgba(255, 215, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(255, 215, 0, 0.55), inset 0 0 15px rgba(255, 215, 0, 0.25);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 560px) {
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+  }
+  
+  .scroll-to-top svg.progress-ring {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .scroll-to-top svg.progress-ring circle {
+    cx: 24;
+    cy: 24;
+    r: 20;
+    stroke-width: 3;
+  }
+  
+  body:has(.floating-whatsapp) .scroll-to-top {
+    bottom: 96px;
+  }
+  
+  .stt-tooltip {
+    display: none !important; /* Hide tooltip on touch screens */
+  }
+
+  /* Mobile offsets and scales for Get Started buttons */
+  .floating-gs-btn {
+    padding: 1.2px;
+  }
+  
+  .floating-gs-btn .btn-content {
+    padding: 9px 18px;
+    font-size: 0.78rem;
+  }
+  
+  .floating-gs-top {
+    top: 76px;
+    right: 20px;
+  }
+  
+  .floating-gs-bottom {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  body:has(.floating-gs-bottom) .scroll-to-top {
+    bottom: 80px;
+    right: 20px;
+  }
+  
+  body:has(.floating-whatsapp) .floating-gs-bottom {
+    bottom: 96px;
+    right: 20px;
+  }
+  
+  body:has(.floating-whatsapp):has(.floating-gs-bottom) .scroll-to-top {
+    bottom: 156px;
+    right: 20px;
+  }
+}
+
+/* ============================================================
+   Floating "Get Started" Buttons
+============================================================ */
+.floating-gs-btn {
+  position: fixed;
+  z-index: 998;
+  padding: 1.5px; /* Border thickness */
+  background: linear-gradient(180deg, 
+    rgba(180, 120, 0, 0.4) 0%,
+    #FFDF00 25%,
+    #FFF8A0 40%,
+    #FFD700 55%,
+    rgba(180, 120, 0, 0.4) 80%,
+    rgba(180, 120, 0, 0.15) 100%
+  );
+  background-size: 100% 300%;
+  border-radius: 100px;
+  display: inline-flex;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.15);
+  animation: border-run-flow 4s linear infinite;
+  
+  /* Initial hidden state transition */
+  opacity: 0;
+  visibility: hidden;
+  transition: 
+    opacity 0.4s ease, 
+    visibility 0.4s ease, 
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+    box-shadow 0.3s ease;
+}
+
+/* Inner solid content wrapper */
+.floating-gs-btn .btn-content {
+  background-color: rgba(26, 0, 2, 0.9); /* Premium dark red-black */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 11px 22px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  
+  /* Text Styling */
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #FFDF00;
+  transition: background-color 0.3s ease;
+}
+
+/* Glass shine sweep effect */
+.floating-gs-btn .btn-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: skewX(-25deg);
+  pointer-events: none;
+  transition: none;
+}
+
+.floating-gs-btn:hover .btn-content::before {
+  left: 200%;
+  transition: left 0.8s ease-in-out;
+}
+
+.floating-gs-btn svg {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.floating-gs-btn:hover .btn-content {
+  background-color: rgba(42, 0, 8, 0.95);
+}
+
+.floating-gs-btn:hover {
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.35), inset 0 0 15px rgba(255, 215, 0, 0.25);
+}
+
+.floating-gs-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* Speed up flow and boost glow when body is scrolling */
+body.is-scrolling .floating-gs-btn {
+  animation-duration: 1.5s;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* Keyframe for flowing border — top to bottom */
+@keyframes border-run-flow {
+  0% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 50% 300%;
+  }
+}
+
+/* Specific Positions */
+.floating-gs-top {
+  top: 90px;
+  right: 24px;
+  transform: translateX(180%);
+}
+
+.floating-gs-bottom {
+  bottom: 24px;
+  right: 24px;
+  transform: translateY(40px) scale(0.8);
+}
+
+/* Visible Toggles */
+.floating-gs-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.floating-gs-bottom.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Hover scales for top/bottom */
+.floating-gs-top.visible:hover {
+  transform: translateY(-4px) scale(1.04);
+}
+
+.floating-gs-bottom.visible:hover {
+  transform: translateY(-4px) scale(1.04);
+}
+
+/* ------------------------------------------------------------
+   Dynamic Offsetting Layout Rules (using CSS :has())
+------------------------------------------------------------ */
+
+/* Stack Scroll-to-Top above Bottom GS button when both are present */
+body:has(.floating-gs-bottom) .scroll-to-top {
+  bottom: 92px;
+}
+
+/* Stack Bottom GS button above WhatsApp button when both are present */
+body:has(.floating-whatsapp) .floating-gs-bottom {
+  bottom: 112px;
+}
+
+/* Stack Scroll-to-Top above Bottom GS button above WhatsApp when all three are present */
+body:has(.floating-whatsapp):has(.floating-gs-bottom) .scroll-to-top {
+  bottom: 180px;
+}

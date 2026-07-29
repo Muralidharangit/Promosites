@@ -369,4 +369,90 @@
         });
     });
 
+    /* ------------------------------------------------------------
+       Scroll to Top Floating Button Logic
+    ------------------------------------------------------------ */
+    var sttBtn = document.getElementById("scrollToTop");
+    var fgsTop = document.getElementById("floatingGetStartedTop");
+    var fgsBottom = document.getElementById("floatingGetStartedBottom");
+
+    if (sttBtn || fgsTop || fgsBottom) {
+        var sttCircle = sttBtn ? sttBtn.querySelector(".progress-ring__circle") : null;
+        var lastScrollTop = 0;
+        var ticking = false;
+
+        function updateScrollToTop() {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+            // 1. Toggle scroll-to-top visibility
+            if (sttBtn) {
+                if (scrollTop > 150) {
+                    sttBtn.classList.add("visible");
+                } else {
+                    sttBtn.classList.remove("visible", "scroll-up", "scroll-down");
+                }
+            }
+
+            // 2. Toggle floating Get Started buttons visibility
+            if (scrollTop > 400) {
+                if (fgsTop) fgsTop.classList.add("visible");
+                if (fgsBottom) fgsBottom.classList.add("visible");
+            } else {
+                if (fgsTop) fgsTop.classList.remove("visible");
+                if (fgsBottom) fgsBottom.classList.remove("visible");
+            }
+
+            // 3. Update progress circle
+            if (sttBtn && sttCircle && docHeight > 0) {
+                var radius = parseFloat(sttCircle.getAttribute("r")) || 24;
+                var circumference = 2 * Math.PI * radius;
+                var scrollPercent = Math.min(Math.max(scrollTop / docHeight, 0), 1);
+                
+                sttCircle.style.strokeDasharray = circumference;
+                sttCircle.style.strokeDashoffset = circumference - (scrollPercent * circumference);
+            }
+
+            // 4. Detect scroll direction & apply animation classes
+            if (sttBtn && scrollTop > 150) {
+                if (scrollTop > lastScrollTop) {
+                    sttBtn.classList.add("scroll-down");
+                    sttBtn.classList.remove("scroll-up");
+                } else if (scrollTop < lastScrollTop) {
+                    sttBtn.classList.add("scroll-up");
+                    sttBtn.classList.remove("scroll-down");
+                }
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            ticking = false;
+        }
+
+        var scrollTimeout;
+        // Throttle scroll events using requestAnimationFrame for maximum performance
+        window.addEventListener("scroll", function () {
+            document.body.classList.add("is-scrolling");
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(function () {
+                document.body.classList.remove("is-scrolling");
+            }, 150);
+
+            if (!ticking) {
+                window.requestAnimationFrame(updateScrollToTop);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        // Smooth scroll to top on click
+        if (sttBtn) {
+            sttBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            });
+        }
+    }
+
 })();
