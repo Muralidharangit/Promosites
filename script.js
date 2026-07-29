@@ -23,7 +23,7 @@
             "Low Investment",
             "High Returns"
         ];
-
+// vsdgdf
         var phraseIndex = 0;
         var charIndex = 0;
         var isErasing = false;
