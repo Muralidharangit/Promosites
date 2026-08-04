@@ -19,7 +19,7 @@
     /* ------------------------------------------------------------
        Config — WhatsApp Link
     ------------------------------------------------------------ */
-    var WHATSAPP_LINK = "https://chat.whatsapp.com/KeqzOIXYTn1LgxJwCaclFX?s=cl&p=a&ilr=0";
+    var WHATSAPP_LINK = "https://api.whatsapp.com/send?phone=447868175325&text=Hi%20I%20required%20more%20details";
 
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
